@@ -11,7 +11,7 @@
     <meta property="og:url" content="https://sg16children.com/" />
     <meta property="og:title" content="SG16 Children World" />
     <meta property="og:video" content="https://sg16children.com/assets/sg16-children-world.mp4" />
-    <link rel="preload" as="video" type="video/mp4" href="/assets/sg16-children-world.mp4?v=2" />
+    <link rel="preload" as="video" type="video/mp4" href="/assets/sg16-children-world.mp4?v=3" />
     <style>
       * {
         box-sizing: border-box;
@@ -32,33 +32,93 @@
         object-fit: cover;
         object-position: center;
         background: #000;
+        cursor: pointer;
+      }
+      .sound-hint {
+        position: fixed;
+        left: 50%;
+        bottom: max(1.25rem, env(safe-area-inset-bottom));
+        transform: translateX(-50%);
+        padding: 0.55rem 1rem;
+        border-radius: 999px;
+        background: rgba(0, 0, 0, 0.55);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        color: #fff;
+        font: 600 0.9rem/1.2 system-ui, sans-serif;
+        pointer-events: none;
+        opacity: 1;
+        transition: opacity 0.4s ease;
+      }
+      .sound-hint.hidden {
+        opacity: 0;
       }
     </style>
   </head>
   <body>
     <video
       id="v"
-      src="/assets/sg16-children-world.mp4?v=2"
+      src="/assets/sg16-children-world.mp4?v=3"
       autoplay
-      muted
       loop
       playsinline
       preload="auto"
     ></video>
+    <div id="hint" class="sound-hint" aria-hidden="true">Tap for sound</div>
     <script>
       (function () {
         var v = document.getElementById('v');
-        v.muted = true;
-        var play = function () {
+        var hint = document.getElementById('hint');
+        var soundOn = false;
+
+        function hideHint() {
+          hint.classList.add('hidden');
+          setTimeout(function () {
+            hint.style.display = 'none';
+          }, 450);
+        }
+
+        function enableSound() {
+          if (soundOn) return;
+          soundOn = true;
+          v.muted = false;
+          v.volume = 1;
+          hideHint();
+          v.play().catch(function () {});
+        }
+
+        function startMuted() {
+          v.muted = true;
           v.play().catch(function () {
             setTimeout(function () {
               v.play().catch(function () {});
             }, 400);
           });
-        };
-        play();
+        }
+
+        v.addEventListener('click', enableSound);
+        document.addEventListener(
+          'touchstart',
+          function () {
+            enableSound();
+          },
+          { once: true, passive: true }
+        );
+
+        v.muted = false;
+        v.volume = 1;
+        v.play()
+          .then(function () {
+            soundOn = true;
+            hideHint();
+          })
+          .catch(function () {
+            startMuted();
+          });
+
         document.addEventListener('visibilitychange', function () {
-          if (document.visibilityState === 'visible' && v.paused) play();
+          if (document.visibilityState === 'visible' && v.paused) {
+            v.play().catch(function () {});
+          }
         });
       })();
     </script>

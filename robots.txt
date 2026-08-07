@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://sg16children.com/sitemap.xml

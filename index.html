@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>SG16 Children World | AI Learning for Kids — Saif Tech Global</title>
+    <meta
+      name="description"
+      content="SG16 Children World — a safe, bright AI learning world for kids. From Saif Tech Global. Explore SG16 AI Engine today."
+    />
+    <meta name="theme-color" content="#0a1a12" />
+    <link rel="canonical" href="https://sg16children.com/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://sg16children.com/" />
+    <meta property="og:title" content="SG16 Children World — AI Learning for Kids" />
+    <meta
+      property="og:description"
+      content="Enter SG16 Children World — safe AI learning, stories, and fun. Built by Saif Tech Global."
+    />
+    <meta property="og:video" content="https://sg16children.com/assets/sg16-children-world.mp4" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preload" as="video" type="video/mp4" href="/assets/sg16-children-world.mp4?v=1" />
+    <link rel="stylesheet" href="/css/site.css?v=1" />
+  </head>
+  <body>
+    <div class="video-bg" aria-hidden="true">
+      <video
+        class="video-bg__el"
+        src="/assets/sg16-children-world.mp4?v=1"
+        autoplay
+        muted
+        loop
+        playsinline
+        preload="auto"
+      ></video>
+      <div class="video-bg__shade"></div>
+    </div>
+
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="/">
+          <span class="brand-mark" aria-hidden="true">SG16</span>
+          <div class="brand-text">
+            <strong>Children World</strong>
+            <span>Saif Tech Global</span>
+          </div>
+        </a>
+        <nav class="site-nav" aria-label="Primary">
+          <a href="https://sg16engine.com" target="_blank" rel="noopener noreferrer">SG16 Engine</a>
+          <a href="https://saiftechglobal.com" target="_blank" rel="noopener noreferrer">Company</a>
+          <a class="nav-cta" href="https://sg16engine.com" target="_blank" rel="noopener noreferrer">Start free</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="container hero-inner">
+          <p class="eyebrow">Coming soon · Safe AI for kids</p>
+          <h1>SG16 <span class="accent">Children World</span></h1>
+          <p class="lead">
+            A bright learning world — AI friends, stories, and discovery. Built with care by
+            <a href="https://saiftechglobal.com" target="_blank" rel="noopener noreferrer">Saif Tech Global</a>.
+          </p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="https://sg16engine.com" target="_blank" rel="noopener noreferrer">
+              Explore SG16 AI Engine
+            </a>
+            <a class="btn btn-ghost" href="https://saiftechglobal.com" target="_blank" rel="noopener noreferrer">
+              Our company
+            </a>
+          </div>
+          <ul class="trust">
+            <li>Child-safe design</li>
+            <li>UK technology company</li>
+            <li>Privacy-first SG16 platform</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="features">
+        <div class="container features-grid">
+          <article class="feature-card">
+            <span class="feature-icon" aria-hidden="true">🤖</span>
+            <h2>AI Learning Friend</h2>
+            <p>Guided conversations and creative play in a dedicated children workspace.</p>
+          </article>
+          <article class="feature-card">
+            <span class="feature-icon" aria-hidden="true">📚</span>
+            <h2>Stories &amp; Discovery</h2>
+            <p>Books, curiosity, and gentle learning paths — built for young minds.</p>
+          </article>
+          <article class="feature-card">
+            <span class="feature-icon" aria-hidden="true">🛡️</span>
+            <h2>Parent Peace of Mind</h2>
+            <p>Separate from adult SG16 shields — designed with safety first.</p>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <p>© 2026 Saif Tech Global Limited · Company No. 16826361</p>
+        <p>
+          <a href="https://saiftechglobal.com/privacy.html" target="_blank" rel="noopener noreferrer">Privacy</a>
+          ·
+          <a href="mailto:contact@saiftechglobal.com">contact@saiftechglobal.com</a>
+        </p>
+      </div>
+    </footer>
+
+    <script>
+      (function () {
+        var v = document.querySelector('.video-bg__el');
+        if (!v) return;
+        v.muted = true;
+        var play = function () {
+          v.play().catch(function () {
+            setTimeout(function () {
+              v.play().catch(function () {});
+            }, 400);
+          });
+        };
+        play();
+        document.addEventListener('visibilitychange', function () {
+          if (document.visibilityState === 'visible' && v.paused) play();
+        });
+      })();
+    </script>
+  </body>
+</html>

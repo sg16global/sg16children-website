@@ -1,0 +1,3 @@
+# Proxy chat API to Railway children service (same-origin for the static site).
+# After Railway deploy: point api.sg16children.com at the service, or replace the host below.
+/api/*  https://api.sg16children.com/api/:splat  200

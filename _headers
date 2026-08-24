@@ -5,3 +5,6 @@
 
 /assets/*
   Cache-Control: public, max-age=86400
+
+/assets/backgrounds/*
+  Cache-Control: public, max-age=604800

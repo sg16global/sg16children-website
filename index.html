@@ -1206,6 +1206,7 @@
     // On sg16children.com use same-origin /api/* (Cloudflare Pages proxy, no CORS).
     // ==============================
     const API_URL = 'https://sg16engine.com/api/sg16/chat';
+    const API_STREAM_URL = 'https://sg16engine.com/api/sg16/chat/stream';
     const API_HEALTH_URL = 'https://sg16engine.com/api/sg16/health';
     const SG16_CLIENT_ID = 'sg16-children-world';
     const VALID_AGE_TIERS = ['6-11', '12-17', '18+'];
@@ -1374,6 +1375,30 @@
       // Scroll
       log.scrollTop = log.scrollHeight;
     }
+    function beginRoboMessage(){
+      const log = document.getElementById("chatLog");
+      const msg = document.createElement("div");
+      msg.className = "msg robo";
+      const av = document.createElement("div");
+      av.className = "avatar";
+      av.textContent = tierAssistantLabel(state.ageTier || "6-11");
+      const bubble = document.createElement("div");
+      bubble.className = "bubble";
+      msg.appendChild(av);
+      msg.appendChild(bubble);
+      log.appendChild(msg);
+      log.scrollTop = log.scrollHeight;
+      return {
+        update(text){
+          bubble.textContent = text;
+          log.scrollTop = log.scrollHeight;
+        },
+        finish(text){
+          bubble.innerHTML = escapeHTML(text);
+          log.scrollTop = log.scrollHeight;
+        }
+      };
+    }
     function setStatus(text){
       document.getElementById("statusLine").textContent = text || "";
     }
@@ -1442,6 +1467,55 @@
       }
       // expected: { reply, safe, flags, ... }
       return data;
+    }
+    async function sendToBackendStream(state, message, onPartial){
+      const payload = buildChatPayload(state, message);
+      const res = await fetch(API_STREAM_URL, {
+        method: "POST",
+        mode: "cors",
+        credentials: "omit",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "text/event-stream",
+          "X-SG16-Client": SG16_CLIENT_ID
+        },
+        body: JSON.stringify(payload)
+      });
+      if(!res.ok){
+        const raw = await res.text().catch(() => "");
+        throw new Error(`Backend error (${res.status}): ${raw || res.statusText}`);
+      }
+      const reader = res.body?.getReader();
+      if(!reader) throw new Error("Streaming not supported in this browser");
+
+      const decoder = new TextDecoder();
+      let buffer = "";
+      let finalResult = null;
+
+      while(true){
+        const { done, value } = await reader.read();
+        if(done) break;
+        buffer += decoder.decode(value, { stream: true });
+        const chunks = buffer.split("\n\n");
+        buffer = chunks.pop() || "";
+        for(const chunk of chunks){
+          if(!chunk.trim()) continue;
+          const lines = chunk.split("\n");
+          let event = "message";
+          let data = "";
+          for(const line of lines){
+            if(line.startsWith("event:")) event = line.slice(6).trim();
+            if(line.startsWith("data:")) data = line.slice(5).trim();
+          }
+          if(!data) continue;
+          const parsed = JSON.parse(data);
+          if(event === "token" && parsed.text) onPartial(String(parsed.text));
+          if(event === "done") finalResult = parsed;
+          if(event === "error") throw new Error(parsed.error || "Stream error");
+        }
+      }
+      if(!finalResult) throw new Error("Stream ended before Robo finished");
+      return finalResult;
     }
     function offlineDemoReply(userText){
       const t = userText.toLowerCase();
@@ -1635,18 +1709,25 @@
       addMessage("user", text);
       setStatus("Robo is thinking…");
       const slowTimer = setTimeout(() => {
-        setStatus("Robo is waking up… first reply can take up to a minute.");
-      }, 12000);
+        setStatus("Robo is typing…");
+      }, 4000);
       try{
         let reply = "";
         if(USE_BACKEND){
-          const data = await sendToBackend(state, text);
+          const live = beginRoboMessage();
+          const data = await sendToBackendStream(state, text, (partial) => {
+            clearTimeout(slowTimer);
+            setStatus("Robo is typing…");
+            live.update(partial);
+            setRoboSpeech(partial);
+          });
           reply = (data && data.reply) ? String(data.reply) : "I’m not sure what to say. Try asking in a different way.";
+          live.finish(reply);
         } else {
           reply = offlineDemoReply(text);
+          addMessage("robo", reply);
         }
         clearTimeout(slowTimer);
-        addMessage("robo", reply);
         setRoboSpeech(reply);
         speak(reply);
         setStatus("Ready.");

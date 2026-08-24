@@ -2,11 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>SG16 Children World — Safe AI Learning for Kids</title>
-  <meta name="description" content="SG16 Children World — parent-gated, age-aware AI learning with Robo. From Saif Tech Global." />
-  <link rel="canonical" href="https://sg16children.com/" />
-  <meta name="theme-color" content="#dceeff" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SG16 Children World — Robo (6–11)</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Montserrat:wght@500;600;700;800&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet" />
@@ -1205,11 +1202,13 @@
      *     { reply, safe: true, flags: [] }
      ************************************************************/
     // ==============================
-    // Config
+    // Config — live SG16 brain (isolated /api/sg16/* route; no auth cookies)
     // ==============================
-    const API_URL = (location.hostname === '127.0.0.1' || location.hostname === 'localhost')
-      ? 'http://localhost:8787/api/sg16/chat'
-      : '/api/sg16/chat';
+    const API_BASE = 'https://sg16engine.com';
+    const API_URL = `${API_BASE}/api/sg16/chat`;
+    const API_HEALTH_URL = `${API_BASE}/api/sg16/health`;
+    const SG16_CLIENT_ID = 'sg16-children-world-local';
+    const VALID_AGE_TIERS = ['6-11', '12-17', '18+'];
     const USE_BACKEND = true;         // set false for offline demo replies
     const STORAGE_KEY = "sg16_session_v1";
     // ==============================
@@ -1383,26 +1382,64 @@
       el.innerHTML = escapeHTML(text);
     }
     // ==============================
-    // Backend call
+    // Backend call (cross-origin to live brain — credentials omitted for isolation)
     // ==============================
-    async function sendToBackend(state, message){
-      const payload = {
-        sessionId: state.sessionId,
-        ageTier: state.ageTier,
-        nickname: state.nickname || "",
-        message
-      };
-      const res = await fetch(API_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-      });
-      if(!res.ok){
-        const t = await res.text().catch(()=> "");
-        throw new Error(`Backend error (${res.status}): ${t || res.statusText}`);
+    function buildChatPayload(state, message){
+      const trimmed = String(message || "").trim();
+      if(!trimmed){
+        throw new Error("Message is empty");
       }
-      const data = await res.json();
-      // expected: {reply, safe, flags}
+      const ageTier = state?.ageTier;
+      if(!ageTier || !VALID_AGE_TIERS.includes(ageTier)){
+        throw new Error("Age tier is not set");
+      }
+      return {
+        sessionId: state.sessionId || newSessionId(),
+        ageTier,
+        nickname: String(state.nickname || "").trim(),
+        message: trimmed
+      };
+    }
+    async function sendToBackend(state, message){
+      const payload = buildChatPayload(state, message);
+      let res;
+      try{
+        res = await fetch(API_URL, {
+          method: "POST",
+          mode: "cors",
+          credentials: "omit",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "X-SG16-Client": SG16_CLIENT_ID
+          },
+          body: JSON.stringify(payload)
+        });
+      }catch(err){
+        const blocked = err instanceof TypeError;
+        throw new Error(
+          blocked
+            ? "Could not reach the SG16 brain (network or browser CORS block). Serve this page from an allowed origin or ask to add your localhost URL to SG16_CHILDREN_ORIGINS on sg16engine.com."
+            : (err?.message || "Network error")
+        );
+      }
+      const raw = await res.text().catch(() => "");
+      let data = null;
+      if(raw){
+        try{
+          data = JSON.parse(raw);
+        }catch{
+          data = null;
+        }
+      }
+      if(!res.ok){
+        const detail = (data && (data.error || data.detail)) || raw || res.statusText;
+        throw new Error(`Backend error (${res.status}): ${detail}`);
+      }
+      if(!data || typeof data.reply !== "string"){
+        throw new Error("Backend returned an unexpected response shape");
+      }
+      // expected: { reply, safe, flags, ... }
       return data;
     }
     function offlineDemoReply(userText){
@@ -1610,8 +1647,14 @@
         setStatus("Ready.");
       }catch(err){
         console.error(err);
-        addMessage("robo", "Oops—something went wrong. Please ask a parent to help and try again.");
-        setStatus("Error talking to server.");
+        const hint = String(err?.message || "");
+        addMessage(
+          "robo",
+          hint.includes("CORS") || hint.includes("Could not reach")
+            ? "I can't reach the SG16 brain from this browser yet. A parent may need to allow this page in SG16 Children World settings."
+            : "Oops—something went wrong. Please ask a parent to help and try again."
+        );
+        setStatus(hint || "Error talking to server.");
       }
     }
     document.getElementById("btnSend").addEventListener("click", onSend);

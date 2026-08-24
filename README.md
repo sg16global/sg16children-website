@@ -68,4 +68,4 @@ Deploy **sg16-ai-engine** after merging the `backend/lib/childrenWorld/` integra
 ## Assets
 
 - `assets/backgrounds/` — tier themes (6–11, 12–17, 18+)
-- `landing/assets/sg16-children-world.mp4` — promo video (legacy landing at `/landing/`)
+- `/landing/` — archived promo landing page (static gradient background)

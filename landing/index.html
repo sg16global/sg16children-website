@@ -17,22 +17,11 @@
       property="og:description"
       content="Enter SG16 Children World — safe AI learning, stories, and fun. Built by Saif Tech Global."
     />
-    <meta property="og:video" content="https://sg16children.com/assets/sg16-children-world.mp4" />
     <meta name="twitter:card" content="summary_large_image" />
-    <link rel="preload" as="video" type="video/mp4" href="/assets/sg16-children-world.mp4?v=1" />
     <link rel="stylesheet" href="/css/site.css?v=1" />
   </head>
   <body>
     <div class="video-bg" aria-hidden="true">
-      <video
-        class="video-bg__el"
-        src="/assets/sg16-children-world.mp4?v=1"
-        autoplay
-        muted
-        loop
-        playsinline
-        preload="auto"
-      ></video>
       <div class="video-bg__shade"></div>
     </div>
 
@@ -111,23 +100,5 @@
       </div>
     </footer>
 
-    <script>
-      (function () {
-        var v = document.querySelector('.video-bg__el');
-        if (!v) return;
-        v.muted = true;
-        var play = function () {
-          v.play().catch(function () {
-            setTimeout(function () {
-              v.play().catch(function () {});
-            }, 400);
-          });
-        };
-        play();
-        document.addEventListener('visibilitychange', function () {
-          if (document.visibilityState === 'visible' && v.paused) play();
-        });
-      })();
-    </script>
   </body>
 </html>

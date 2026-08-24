@@ -44,14 +44,9 @@ a {
   z-index: 0;
   overflow: hidden;
   pointer-events: none;
-  background: #071510;
-}
-
-.video-bg__el {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(92, 255, 138, 0.14), transparent 60%),
+    linear-gradient(180deg, #0a2418 0%, #071510 55%, #041009 100%);
 }
 
 .video-bg__shade {

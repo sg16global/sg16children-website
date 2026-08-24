@@ -1203,11 +1203,17 @@
      ************************************************************/
     // ==============================
     // Config — live SG16 brain (isolated /api/sg16/* route; no auth cookies)
+    // On sg16children.com use same-origin /api/* (Cloudflare Pages proxy, no CORS).
     // ==============================
-    const API_BASE = 'https://sg16engine.com';
-    const API_URL = `${API_BASE}/api/sg16/chat`;
-    const API_HEALTH_URL = `${API_BASE}/api/sg16/health`;
-    const SG16_CLIENT_ID = 'sg16-children-world-local';
+    const CHILDREN_HOSTS = new Set(['sg16children.com', 'www.sg16children.com']);
+    const ON_CHILDREN_SITE = CHILDREN_HOSTS.has(location.hostname.toLowerCase());
+    const API_URL = ON_CHILDREN_SITE
+      ? '/api/sg16/chat'
+      : 'https://sg16engine.com/api/sg16/chat';
+    const API_HEALTH_URL = ON_CHILDREN_SITE
+      ? '/api/sg16/health'
+      : 'https://sg16engine.com/api/sg16/health';
+    const SG16_CLIENT_ID = ON_CHILDREN_SITE ? 'sg16-children-world' : 'sg16-children-world-local';
     const VALID_AGE_TIERS = ['6-11', '12-17', '18+'];
     const USE_BACKEND = true;         // set false for offline demo replies
     const STORAGE_KEY = "sg16_session_v1";

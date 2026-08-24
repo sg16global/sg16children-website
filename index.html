@@ -1408,6 +1408,7 @@
           method: "POST",
           mode: "cors",
           credentials: "omit",
+          signal: AbortSignal.timeout(90000),
           headers: {
             "Content-Type": "application/json",
             "Accept": "application/json",
@@ -1633,6 +1634,9 @@
       input.value = "";
       addMessage("user", text);
       setStatus("Robo is thinking…");
+      const slowTimer = setTimeout(() => {
+        setStatus("Robo is waking up… first reply can take up to a minute.");
+      }, 12000);
       try{
         let reply = "";
         if(USE_BACKEND){
@@ -1641,11 +1645,13 @@
         } else {
           reply = offlineDemoReply(text);
         }
+        clearTimeout(slowTimer);
         addMessage("robo", reply);
         setRoboSpeech(reply);
         speak(reply);
         setStatus("Ready.");
       }catch(err){
+        clearTimeout(slowTimer);
         console.error(err);
         const hint = String(err?.message || "");
         addMessage(

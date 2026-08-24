@@ -1409,6 +1409,17 @@
     // ==============================
     // Backend call (cross-origin to live brain — credentials omitted for isolation)
     // ==============================
+    function collectChatHistory(){
+      const items = [];
+      for (const msg of document.getElementById("chatLog").querySelectorAll(".msg")) {
+        if (msg.classList.contains("streaming")) continue;
+        const role = msg.classList.contains("user") ? "user" : "assistant";
+        const text = msg.querySelector(".bubble")?.textContent?.trim();
+        if (text) items.push({ role, content: text });
+      }
+      if (items.length && items[items.length - 1].role === "user") items.pop();
+      return items.slice(-12);
+    }
     function buildChatPayload(state, message){
       const trimmed = String(message || "").trim();
       if(!trimmed){
@@ -1422,7 +1433,8 @@
         sessionId: state.sessionId || newSessionId(),
         ageTier,
         nickname: String(state.nickname || "").trim(),
-        message: trimmed
+        message: trimmed,
+        history: collectChatHistory()
       };
     }
     async function sendToBackend(state, message){

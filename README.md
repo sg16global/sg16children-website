@@ -69,3 +69,5 @@ Deploy **sg16-ai-engine** after merging the `backend/lib/childrenWorld/` integra
 
 - `assets/backgrounds/` — tier themes (6–11, 12–17, 18+)
 - `/landing/` — archived promo landing page (static gradient background)
+
+<!-- redeploy: restore sovereign brain 2026-08-28T01:22:00Z -->

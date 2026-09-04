@@ -1,12 +1,12 @@
 # SG16 Children World — sg16children.com
 
-Parent-gated, age-aware AI learning app (**Robo**) for **sg16children.com**, backed by the shared SG16 brain on Railway.
+Parent-gated, age-aware AI learning app (**Robo**) for **sg16children.com**, backed by **SG16 Mistral X** at `api.mistralbrain.com` via `sg16engine.com`.
 
 | Layer | Host | Repo / service |
 |-------|------|----------------|
 | Static app | `sg16children.com` | This repo (Cloudflare Pages) |
-| Children API | `api.sg16children.com` | `backend/` on Railway |
-| Brain (Ollama/Kali) | `sg16engine.com` (internal pipe) | `sg16global/sg16-ai-engine` |
+| Children API | `api.sg16children.com` | `backend/` on Railway (optional proxy) |
+| Brain | `api.mistralbrain.com` | Cloudflare Workers AI — via `sg16engine.com/api/sg16/*` |
 
 ## Structure
 

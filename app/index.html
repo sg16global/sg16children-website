@@ -133,15 +133,26 @@
     .bg-scene, .bg-overlay{ position: fixed; inset: 0; pointer-events: none; z-index: 0; }
     .bg-scene{
       background: var(--scene-fallback);
-      background-size: cover; background-position: center; background-repeat: no-repeat;
+      background-size: cover; background-position: center top; background-repeat: no-repeat;
+      background-attachment: fixed;
       transform: scale(1.02);
       transition: opacity .45s ease;
     }
     .bg-overlay{ background: var(--overlay-gradient); transition: background .45s ease; }
-    body.tier-default .bg-scene{ background-image: url("/assets/backgrounds/tier-a.jpg"), var(--scene-fallback); }
-    body.tier-a .bg-scene{ background-image: url("/assets/backgrounds/tier-b-alt.jpg"), var(--scene-fallback); }
-    body.tier-b .bg-scene{ background-image: url("/assets/backgrounds/tier-b.jpg"), var(--scene-fallback); }
-    body.tier-c .bg-scene{ background-image: url("/assets/backgrounds/tier-c.jpg"), var(--scene-fallback); }
+    /* Same playground hero as public homepage (/) */
+    body.tier-default .bg-scene,
+    body.tier-a .bg-scene,
+    body.tier-b .bg-scene{
+      background-image: url("/assets/home-hero.jpg"), var(--scene-fallback);
+    }
+    body.tier-default .bg-overlay,
+    body.tier-a .bg-overlay,
+    body.tier-b .bg-overlay{
+      background: linear-gradient(180deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.08) 35%, rgba(15,39,68,0.12) 100%);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+    }
+    body.tier-c .bg-scene{ background-image: url("/assets/backgrounds/tier-c.jpg"), var(--scene-fallback); background-position: center; }
     a{ color: #4a9fd4; text-decoration: none; font-weight: 700; }
     a:hover{ text-decoration: underline; color: var(--accent); }
     .hidden{ display: none !important; }
@@ -1243,8 +1254,7 @@
       thinking: { src: '/assets/robo_thinking.mp4', loop: true  },
       happy:    { src: '/assets/robo_happy.mp4',    loop: false }
     };
-    const ROBO_FALLBACK_CLIP = '/assets/robo.mp4';
-    let roboClipsMode = null;   // 'clips' | 'single' | 'none'
+    let roboClipsMode = null;   // 'clips' | 'none' — SVG is default hero; legacy robo.mp4 is not used
     let roboToken = 0;
 
     async function probeVideo(src){
@@ -1258,7 +1268,6 @@
     async function detectRoboClips(){
       if(roboClipsMode) return roboClipsMode;
       if(await probeVideo(ROBO_CLIPS.idle.src)) roboClipsMode = 'clips';
-      else if(await probeVideo(ROBO_FALLBACK_CLIP)) roboClipsMode = 'single';
       else roboClipsMode = 'none';
       return roboClipsMode;
     }
@@ -1274,10 +1283,10 @@
       if(token !== roboToken) return;
       if(m === 'none'){ markRoboVideoLive(false); return; }
       const clip = ROBO_CLIPS[mode] || ROBO_CLIPS.idle;
-      const src = m === 'clips' ? clip.src : ROBO_FALLBACK_CLIP;
+      const src = clip.src;
       if(video.dataset.src !== src){ video.src = src; video.dataset.src = src; video.load(); }
-      video.loop = m === 'single' ? true : !!clip.loop;
-      video.onended = (m === 'clips' && mode === 'happy') ? () => { if(token === roboToken) setRoboMode('idle'); } : null;
+      video.loop = !!clip.loop;
+      video.onended = (mode === 'happy') ? () => { if(token === roboToken) setRoboMode('idle'); } : null;
       try{ await video.play(); if(token === roboToken) markRoboVideoLive(true); }
       catch{ markRoboVideoLive(false); }
     }

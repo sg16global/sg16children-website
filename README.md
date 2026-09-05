@@ -8,6 +8,19 @@ Parent-gated, age-aware AI learning app (**Robo**) for **sg16children.com**, bac
 | Children API | `api.sg16children.com` | `backend/` on Railway (optional proxy) |
 | Brain | `api.mistralbrain.com` | Cloudflare Workers AI — via `sg16engine.com/api/sg16/*` |
 
+## PWA (standalone home-screen app)
+
+This site is its **own installable app** on `sg16children.com` — separate from SG16 Engine, Saif Tech, and SG16 Finance.
+
+Before deploy, regenerate manifest + service worker:
+
+```powershell
+node scripts/pwa-generate.mjs .
+npx wrangler pages deploy . --project-name sg16-children-world --commit-dirty=true
+```
+
+Edit `pwa.config.json` and bump `"version"` when precache paths change. Master generator: `shared/sg16-pwa/` in the MISTRAL BRAIN workspace.
+
 ## Structure
 
 ```

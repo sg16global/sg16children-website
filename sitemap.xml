@@ -6,8 +6,8 @@
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://sg16children.com/landing/</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <loc>https://sg16children.com/app/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
   </url>
 </urlset>

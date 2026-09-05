@@ -1,0 +1,54 @@
+{
+  "id": "https://sg16children.com/",
+  "name": "SG16 Children World",
+  "short_name": "SG16 Kids",
+  "description": "Play · Learn · Grow — safe AI learning for kids and families.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#dceeff",
+  "theme_color": "#5eb8ff",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": [
+    "education",
+    "kids",
+    "family"
+  ],
+  "icons": [
+    {
+      "src": "/assets/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/icons/icon-512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Robo App",
+      "short_name": "Robo",
+      "description": "Open SG16 Children World Robo",
+      "url": "/app/",
+      "icons": [
+        {
+          "src": "/assets/icons/app-children.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    }
+  ]
+}

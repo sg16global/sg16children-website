@@ -15,7 +15,7 @@
   "icon_source": "assets/sg16-children-world-logo.jpg",
   "icons_dir": "assets/icons",
   "icon_background": "#dceeff",
-  "version": 12,
+  "version": 14,
   "precache": [
     "/",
     "/app/",

@@ -12,6 +12,10 @@ Parent-gated, age-aware AI learning app (**Robo**) for **sg16children.com**, bac
 
 This site is its **own installable app** on `sg16children.com` — separate from SG16 Engine, Saif Tech, and SG16 Finance.
 
+## Deploy workflow
+
+**Git push does not auto-deploy.** Cloudflare Pages git builds are paused for `sg16-children-world` — push to GitHub anytime; deploy only when you choose.
+
 Before deploy, regenerate manifest + service worker:
 
 ```powershell

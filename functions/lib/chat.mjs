@@ -102,7 +102,9 @@ export async function runChildrenChat(env, body) {
   const sanitized = pre.redactedText || userText;
   const systemPrompt = buildSystemPrompt(ageTier, pre.action === Action.SAFE_COMPLETE);
   const userPayload = buildUserMessage(sanitized, nickname);
-  const timeoutMs = Number(env.SG16_CHILDREN_CHAT_TIMEOUT_MS || 120000);
+  // Must stay below the browser's abort in app/index.html, otherwise the
+  // offlineFallback() below can never run and the client gives up first.
+  const timeoutMs = Number(env.SG16_CHILDREN_CHAT_TIMEOUT_MS || 25000);
 
   let content;
   try {

@@ -1418,7 +1418,7 @@
       try{
         res = await fetch(API_URL, {
           method: 'POST', mode: 'cors', credentials: 'omit',
-          signal: AbortSignal.timeout ? AbortSignal.timeout(90000) : undefined,
+          signal: AbortSignal.timeout ? AbortSignal.timeout(35000) : undefined,
           headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'X-SG16-Client': SG16_CLIENT_ID },
           body: JSON.stringify(payload)
         });

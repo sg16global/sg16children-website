@@ -59,7 +59,7 @@ export async function pingBrain(env) {
   }
 }
 
-export async function callBrainChat({ env, messages, timeoutMs = 120000 }) {
+export async function callBrainChat({ env, messages, timeoutMs = 25000 }) {
   const { key, brainUrl } = getBrainConfig(env);
   if (!key) throw new Error('MISTRAL_BRAIN_KEY not configured');
 

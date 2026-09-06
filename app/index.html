@@ -1017,10 +1017,9 @@
     // ==============================
     // Config
     // ==============================
-    const LIVE_HOSTS = new Set(['sg16children.com', 'www.sg16children.com']);
+    // Config — always same-origin API on this project (direct brain via Pages Functions)
     const HOST = location.hostname || '';
-    const LOCAL_DEV_HOST = /^(localhost|127\.0\.0\.1|192\.168\.\d+\.\d+|172\.(?:1[6-9]|2\d|3[01])\.\d+\.\d+)$/i.test(HOST);
-    const API_ORIGIN = (LIVE_HOSTS.has(HOST) || LOCAL_DEV_HOST) ? location.origin : 'https://sg16engine.com';
+    const API_ORIGIN = location.origin;
     const API_URL = `${API_ORIGIN}/api/sg16/chat`;
     const SG16_CLIENT_ID = 'sg16-children-world';
     const VALID_AGE_TIERS = ['6-11', '12-17', '18+'];
@@ -1426,7 +1425,7 @@
       }catch(err){
         const blocked = err instanceof TypeError;
         const e = new Error(blocked
-          ? 'Could not reach the SG16 brain (network or CORS block). Serve this page from an allowed origin or add your URL to SG16_CHILDREN_ORIGINS on sg16engine.com.'
+          ? 'Could not reach the SG16 brain (network or CORS block). Use sg16children.com or local dev with wrangler pages dev.'
           : (err?.message || 'Network error'));
         e.unreachable = true;
         throw e;

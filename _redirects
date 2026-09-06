@@ -1,2 +1,1 @@
-# Same-origin proxy to live SG16 brain (server-side; browser avoids CORS).
-/api/*  https://sg16engine.com/api/:splat  200
+# sg16children.com — no Engine proxy. API handled by functions/api/sg16/* on this Pages project.
